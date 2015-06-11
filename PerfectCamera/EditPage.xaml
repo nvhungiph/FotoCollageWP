@@ -1,0 +1,417 @@
+﻿<phone:PhoneApplicationPage
+    x:Class="PerfectCamera.EditPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait" Orientation="Portrait"
+    mc:Ignorable="d"
+    shell:SystemTray.IsVisible="False"
+    Style="{StaticResource TransitionPageStyle}">
+
+    <phone:PhoneApplicationPage.Resources>
+        <Storyboard x:Name="ShowControlsAnimationStoryBoard">
+            <DoubleAnimation 
+                x:Name="ShowControlsAnimation"
+                Storyboard.TargetProperty="(UIElement.Opacity)" 
+                To="1"
+                Duration="0:0:0.2"
+                />
+        </Storyboard>
+        <Storyboard x:Name="HideControlsAnimationStoryBoard">
+            <DoubleAnimation 
+                x:Name="HideControlsAnimation"
+                Storyboard.TargetProperty="(UIElement.Opacity)"
+                To="0"
+                Duration="0:0:0.3" 
+                />
+        </Storyboard>
+    </phone:PhoneApplicationPage.Resources>
+
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid x:Name="LayoutRoot" Background="#272829">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.Resources>
+            <Storyboard x:Name="EffectLayoutSlideIn"
+                        Completed="EffectLayoutSlideIn_Completed">
+                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="EffectLayout">
+                    <EasingDoubleKeyFrame KeyTime="0" Value="200"/>
+                    <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0" />
+                </DoubleAnimationUsingKeyFrames>
+            </Storyboard>
+            <Storyboard x:Name="EffectLayoutSlideOut"
+                        Completed="EffectLayoutSlideOut_Completed">
+                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="EffectLayout">
+                    <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                    <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="200" />
+                </DoubleAnimationUsingKeyFrames>
+            </Storyboard>
+
+            <Storyboard x:Name="FilterPanelSlideIn">
+                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)" Storyboard.TargetName="FilterScrollViewer">
+                    <EasingDoubleKeyFrame KeyTime="0" Value="480"/>
+                    <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0" />
+                </DoubleAnimationUsingKeyFrames>
+            </Storyboard>
+
+            <Storyboard x:Name="FilterPanelSlideOut">
+                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateX)" Storyboard.TargetName="FilterScrollViewer">
+                    <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                    <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="480" />
+                </DoubleAnimationUsingKeyFrames>
+            </Storyboard>
+        </Grid.Resources>
+
+        <Grid Grid.Row="0"
+              Height="70"
+              Background="#171819">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="110"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="110"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Style="{StaticResource ButtonStyleNoBorder}"
+                        Content="Cancel"
+                        FontWeight="Light"
+                        Foreground="White"
+                        FontSize="21"
+                        x:Name="CancelButton"
+                        Click="CancelButton_Click"
+                    HorizontalContentAlignment="Left"
+                        Margin="10,0,0,0"
+                    Grid.Column="0"/>
+
+            <TextBlock Text="Edit"
+                       TextAlignment="Center"
+                       FontSize="23"
+                       FontWeight="Normal"
+                       Foreground="#888888"
+                       VerticalAlignment="Center"
+                       Grid.Column="1"
+                       x:Name="TitleTextBlock"/>
+
+            <Button Style="{StaticResource ButtonStyleNoBorder}"
+                        Content="Save"
+                        FontWeight="Light"
+                        Foreground="White"
+                        FontSize="21"
+                        x:Name="SaveButton"
+                        Click="SaveButton_Click"
+                    HorizontalContentAlignment="Right"
+                        Margin="0,0,10,0"
+                    Grid.Column="2"/>
+        </Grid>
+
+        <Grid x:Name="PreviewImageGrid" Grid.Row="1" Margin="10,10,10,-40"
+              Hold="PreviewImageGrid_Hold"
+              MouseLeftButtonUp="PreviewImageGrid_MouseLeftButtonUp"
+              MouseLeave="PreviewImageGrid_MouseLeave">
+
+            <Image Source="/Assets/ThumbnailSample.png"
+               Stretch="Uniform"
+               x:Name="OriginalImageHolder"/>
+            
+            <Image Source="/Assets/ThumbnailSample.png"
+               Stretch="Uniform"
+               x:Name="CurrentEditImage"
+                   IsHitTestVisible="False"/>
+
+            <Grid x:Name="HintText"
+              Height="50" 
+              Margin="0,0,0,70" 
+              VerticalAlignment="Bottom" 
+              Background="Transparent" Visibility="Collapsed">
+                <Rectangle
+                x:Name="HintTextBackground"
+                Fill="{StaticResource PhoneAccentBrush}" Opacity="0.5" />
+                <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Style="{StaticResource PhoneTextNormalStyle}"
+                Text="{Binding Path=LocalizedResources.FilterSettingsHintText, Source={StaticResource LocalizedStrings}}" />
+            </Grid>
+            
+            <ProgressBar x:Name="ApplyEditIndicator"
+                         IsIndeterminate="True"
+                         VerticalAlignment="Center"
+                         Visibility="Collapsed"/>
+        </Grid>
+        
+        <ScrollViewer VerticalScrollBarVisibility="Disabled"
+                      HorizontalScrollBarVisibility="Hidden"
+                      Background="#171819"
+                      Grid.Row="2"
+                      Height="150"
+                      VerticalAlignment="Bottom">
+            <StackPanel Orientation="Horizontal">
+                <Button Style="{StaticResource ButtonStyleNoBorder}"
+                        Width="120"
+                        x:Name="EffectButton"
+                        Click="EffectButton_Click">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Image Source="/Assets/EffectIcon.png"
+                               Stretch="Uniform"
+                               Grid.Row="0"
+                               Width="50"
+                               Height="50"
+                               Margin="0,0,0,10"/>
+                        <TextBlock HorizontalAlignment="Center"
+                                   TextAlignment="Center"
+                                   Text="Effect"
+                                   Grid.Row="1"
+                                   FontSize="21"
+                                   FontWeight="Light"
+                                   VerticalAlignment="Bottom"/>
+                    </Grid>
+                </Button>
+                <Rectangle Width="1" Fill="#272829"/>
+
+                <Button Style="{StaticResource ButtonStyleNoBorder}"
+                        Width="120">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Image Source="/Assets/BlurIcon.png"
+                               Stretch="Uniform"
+                               Width="50"
+                               Height="50"
+                               Margin="0,0,0,10"
+                               Grid.Row="0"/>
+                        <TextBlock HorizontalAlignment="Center"
+                                   TextAlignment="Center"
+                                   Text="Blur"
+                                   Grid.Row="1"
+                                   FontSize="21"
+                                   FontWeight="Light"
+                                   VerticalAlignment="Bottom"/>
+                    </Grid>
+                </Button>
+                <Rectangle Width="1" Fill="#272829"/>
+
+                <Button Style="{StaticResource ButtonStyleNoBorder}"
+                        Width="120">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Image Source="/Assets/AdjustIcon.png"
+                               Width="50"
+                               Height="50"
+                               Margin="0,0,0,10"
+                               Stretch="Uniform"
+                               Grid.Row="0"/>
+                        <TextBlock HorizontalAlignment="Center"
+                                   TextAlignment="Center"
+                                   Text="Adjust"
+                                   Grid.Row="1"
+                                   FontSize="21"
+                                   FontWeight="Light"
+                                   VerticalAlignment="Bottom"/>
+                    </Grid>
+                </Button>
+                <Rectangle Width="1" Fill="#272829"/>
+
+                <Button Style="{StaticResource ButtonStyleNoBorder}"
+                        Width="120">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Image Source="/Assets/CropIcon.png"
+                               Width="50"
+                               Height="50"
+                               Margin="0,0,0,10"
+                               Stretch="Uniform"
+                               Grid.Row="0"/>
+                        <TextBlock HorizontalAlignment="Center"
+                                   TextAlignment="Center"
+                                   Text="Crop"
+                                   Grid.Row="1"
+                                   FontSize="21"
+                                   FontWeight="Light"
+                                   VerticalAlignment="Bottom"/>
+                    </Grid>
+                </Button>
+                <Rectangle Width="1" Fill="#272829"/>
+
+                <Button Style="{StaticResource ButtonStyleNoBorder}"
+                        Width="120">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Image Source="/Assets/RotateIcon.png"
+                               Width="50"
+                               Height="50"
+                               Margin="0,0,0,10"
+                               Stretch="Uniform"
+                               Grid.Row="0"/>
+                        <TextBlock HorizontalAlignment="Center"
+                                   TextAlignment="Center"
+                                   Text="Rotation"
+                                   Grid.Row="1"
+                                   FontSize="21"
+                                   FontWeight="Light"
+                                   VerticalAlignment="Bottom"/>
+                    </Grid>
+                </Button>
+                <Rectangle Width="1" Fill="#272829"/>
+
+                <Button Style="{StaticResource ButtonStyleNoBorder}"
+                        Width="120">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Image Source="/Assets/ShadeIcon.png"
+                               Width="50"
+                               Height="50"
+                               Margin="0,0,0,10"
+                               Stretch="Uniform"
+                               Grid.Row="0"/>
+                        <TextBlock HorizontalAlignment="Center"
+                                   TextAlignment="Center"
+                                   Text="Shade"
+                                   Grid.Row="1"
+                                   FontSize="21"
+                                   FontWeight="Light"
+                                   VerticalAlignment="Bottom"/>
+                    </Grid>
+                </Button>
+                <Rectangle Width="1" Fill="#272829"/>
+
+                <Button Style="{StaticResource ButtonStyleNoBorder}"
+                        Width="120">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Image Source="/Assets/FrameIcon.png"
+                               Width="50"
+                               Height="50"
+                               Margin="0,0,0,10"
+                               Stretch="Uniform"
+                               Grid.Row="0"/>
+                        <TextBlock HorizontalAlignment="Center"
+                                   TextAlignment="Center"
+                                   Text="Frame"
+                                   Grid.Row="1"
+                                   FontSize="21"
+                                   FontWeight="Light"
+                                   VerticalAlignment="Bottom"/>
+                    </Grid>
+                </Button>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Grid Grid.Row="2" Height="200"
+              VerticalAlignment="Bottom"
+              Background="Black"
+              x:Name="EffectLayout"
+              Margin="0,0,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+
+            <Grid.RenderTransform>
+                <CompositeTransform TranslateY="200"/>
+            </Grid.RenderTransform>
+
+            <ScrollViewer Grid.Row="0" Background="Black" VerticalScrollBarVisibility="Disabled"
+                          HorizontalScrollBarVisibility="Hidden"
+                          x:Name="EffectScrollViewer">
+                <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Width="545"
+                            x:Name="EffectStackPanel">
+                </StackPanel>
+            </ScrollViewer>
+
+            <ScrollViewer Grid.Row="0" Background="Black" VerticalScrollBarVisibility="Disabled"
+                          HorizontalScrollBarVisibility="Hidden"
+                          x:Name="FilterScrollViewer">
+                <ScrollViewer.RenderTransform>
+                    <CompositeTransform TranslateX="480"/>
+                </ScrollViewer.RenderTransform>
+                <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Width="545"
+                            x:Name="FilterStackPanel">
+                </StackPanel>
+            </ScrollViewer>
+
+            <Grid Grid.Row="1"
+                  Background="#3a3a3a">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Button Style="{StaticResource ButtonStyleNoBorder}"
+                        Width="80"
+                        x:Name="CancelEffectButton"
+                        Click="CancelEffectButton_Click"
+                        Grid.Column="0"
+                        Margin="10,0,0,0"
+                        HorizontalContentAlignment="Left"
+                        Visibility="Collapsed">
+                    <Image Source="/Assets/CloseButton.png"
+                                    Stretch="Uniform"
+                           Width="20"/>
+                </Button>
+                <TextBlock Text="Effect"
+                           Grid.Column="1"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           TextAlignment="Center"
+                           FontSize="21"
+                           FontWeight="Light"
+                           x:Name="EffectTitleTextBlock"
+                           Visibility="Collapsed"/>
+                <Button Style="{StaticResource ButtonStyleNoBorder}"
+                        Width="30"
+                        x:Name="HideEffectLayoutButton"
+                        Click="HideEffectLayoutButton_Click"
+                        Grid.Column="1">
+                    <Button.Background>
+                        <ImageBrush ImageSource="/Assets/DownArrowButton.png"
+                                    Stretch="Uniform"/>
+                    </Button.Background>
+                </Button>
+                
+                <Button Style="{StaticResource ButtonStyleNoBorder}"
+                        Width="80"
+                        x:Name="ApplyEffectButton"
+                        Click="ApplyEffectButton_Click"
+                        Grid.Column="2"
+                        Margin="0,0,10,0"
+                        HorizontalContentAlignment="Right"
+                        Visibility="Collapsed">
+                    <Image Source="/Assets/CheckIcon.png"
+                                    Stretch="Uniform"
+                           Width="25"/>
+                </Button>
+            </Grid>
+        </Grid>
+    </Grid>
+
+</phone:PhoneApplicationPage>

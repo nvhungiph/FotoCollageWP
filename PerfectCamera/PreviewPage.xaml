@@ -1,0 +1,120 @@
+﻿<phone:PhoneApplicationPage
+    x:Class="PerfectCamera.PreviewPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait" Orientation="Portrait"
+    mc:Ignorable="d"
+    shell:SystemTray.IsVisible="False"
+    Style="{StaticResource TransitionPageStyle}"
+    Loaded="PreviewPage_Loaded">
+
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid x:Name="LayoutRoot" Background="#272829">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <Grid Grid.Row="0"
+              Height="70"
+              Background="#171819">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="110"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="110"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Style="{StaticResource ButtonStyleNoBorder}"
+                        HorizontalAlignment="Left"
+                    Margin="10,0,0,0"
+                    x:Name="BackButton"
+                    Click="BackButton_Click"
+                    HorizontalContentAlignment="Left"
+                    Grid.Column="0"
+                    Width="100">
+                <Image Source="/Assets/LeftArrowButton.png"
+                       Stretch="Uniform"
+                       Width="12"/>
+            </Button>
+
+            <TextBlock Text="0/0"
+                       TextAlignment="Center"
+                       FontSize="23"
+                       FontWeight="Normal"
+                       Foreground="#888888"
+                       VerticalAlignment="Center"
+                       Grid.Column="1"
+                       x:Name="TitleTextBlock"/>
+
+            <Button Style="{StaticResource ButtonStyleNoBorder}"
+                        Content="Album"
+                        FontWeight="Light"
+                        Foreground="White"
+                        FontSize="21"
+                        x:Name="AlbumButton"
+                        Click="AlbumButton_Click"
+                    HorizontalContentAlignment="Right"
+                        Margin="0,0,10,0"
+                    Grid.Column="2"/>
+        </Grid>
+
+        <phone:Pivot Grid.Row="1" x:Name="ImagePreviewPivot" Margin="0,-24,0,10"
+                     SelectionChanged="ImagePreviewPivot_SelectionChanged">
+            <!--<phone:PivotItem>
+                <Image Source="/Assets/ThumbnailSample.png"
+                       Stretch="UniformToFill"/>
+            </phone:PivotItem>-->
+        </phone:Pivot>
+
+        <Grid Grid.Row="2"
+              Height="80"
+              Background="#171819">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <Button Style="{StaticResource ButtonStyleNoBorder}"
+                    Content="Share"
+                    FontWeight="Light"
+                    FontSize="21" Grid.Column="0"
+                    HorizontalAlignment="Left"
+                    Margin="10,0,0,0"
+                    x:Name="ShareButton"
+                    Click="ShareButton_Click"/>
+
+            <Button Style="{StaticResource ButtonStyleNoBorder}"
+                    Content="Edit"
+                    FontWeight="Light"
+                    FontSize="21" Grid.Column="1"
+                    x:Name="EditButton"
+                    Click="EditButton_Click"/>
+
+            <Button Style="{StaticResource ButtonStyleNoBorder}"
+                    Content="Delete"
+                    FontWeight="Light"
+                    FontSize="21" Grid.Column="2"
+                    HorizontalAlignment="Right"
+                    Margin="0,0,10,0"
+                    x:Name="DeleteButton"
+                    Click="DeleteButton_Click"/>
+        </Grid>
+
+        <!--<ProgressBar x:Name="ProgressIndicator" Grid.Row="1"
+                     VerticalAlignment="Center"
+                     HorizontalAlignment="Stretch"
+                     IsIndeterminate="True"
+                     Visibility="Visible"/>-->
+
+    </Grid>
+
+</phone:PhoneApplicationPage>

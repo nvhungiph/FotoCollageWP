@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="PerfectCamera.Filters.FilterControls.CropRegionControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    d:DesignHeight="480" d:DesignWidth="480">
+    
+    <Grid x:Name="LayoutRoot" Background="{StaticResource PhoneChromeBrush}">
+        <Grid  HorizontalAlignment="Center" VerticalAlignment="Center">
+
+            <Image Source="/Assets/ThumbnailSample.png" IsHitTestVisible="False" Opacity="0.3" ></Image>
+            <Image Name="imgSauce" Source="/Assets/ThumbnailSample.png" >
+                <Image.Clip>
+                    <RectangleGeometry x:Name="clipRect" ></RectangleGeometry>
+                </Image.Clip>
+            </Image>
+            <Rectangle Name="rectTopLeft" Width="20" Height="20" Margin="-10" Fill="Yellow" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                <Rectangle.RenderTransform>
+                    <TranslateTransform></TranslateTransform>
+                </Rectangle.RenderTransform>
+            </Rectangle>
+            <Rectangle Name="rectTopRight" Width="20" Height="20" Margin="-10" Fill="Yellow" HorizontalAlignment="Right" VerticalAlignment="Top" >
+                <Rectangle.RenderTransform>
+                    <TranslateTransform></TranslateTransform>
+                </Rectangle.RenderTransform>
+            </Rectangle>
+            <Rectangle Name="rectBotLeft" Width="20" Height="20" Margin="-10" Fill="Yellow" HorizontalAlignment="Left" VerticalAlignment="Bottom" >
+                <Rectangle.RenderTransform>
+                    <TranslateTransform></TranslateTransform>
+                </Rectangle.RenderTransform>
+            </Rectangle>
+            <Rectangle Name="rectBotRight" Width="20" Height="20" Margin="-10" Fill="Yellow" HorizontalAlignment="Right" VerticalAlignment="Bottom" >
+                <Rectangle.RenderTransform>
+                    <TranslateTransform></TranslateTransform>
+                </Rectangle.RenderTransform>
+            </Rectangle>
+        </Grid>
+    </Grid>
+</UserControl>

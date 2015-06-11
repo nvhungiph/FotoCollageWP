@@ -1,0 +1,103 @@
+﻿<UserControl x:Class="PerfectCamera.FlashMenu"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    d:DesignHeight="480" d:DesignWidth="480">
+
+    <Grid x:Name="LayoutRoot" Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid x:Name="ContentLayout" Grid.Row="0"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Top"
+              Margin="0,50,220,0"
+              Width="121"
+              Height="177">
+            <Grid.Background>
+                <ImageBrush ImageSource="/Assets/FlashMenuBackground.png"
+                            Stretch="Uniform"/>
+            </Grid.Background>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Button Style="{StaticResource ButtonStyleNoBorder}"
+                        Content="Auto"
+                        FontWeight="Light"
+                        FontSize="23"
+                        Margin="0,0,5,0"
+                        Grid.Row="1"
+                        x:Name="FlashAutoButton"
+                    Foreground="#F9D264"
+                    HorizontalContentAlignment="Right"
+                    Click="FlashAutoButton_Click"/>
+            <Image Grid.Row="1"
+                       Source="/Assets/FlashAutoOn.png"
+                       Width="20"
+                       Margin="10,0,0,0"
+                       Stretch="Uniform"
+                   HorizontalAlignment="Left"
+                   x:Name="FlashAutoImage"/>
+
+            <Image Source="/Assets/HorizontalSettingLine.png"
+                   Grid.Row="2"
+                   Stretch="Fill"
+                   Height="1"
+                   Margin="5,0,5,0"/>
+
+            <Button Style="{StaticResource ButtonStyleNoBorder}"
+                        Content="On"
+                        FontWeight="Light"
+                        FontSize="23"
+                        Margin="0,0,5,0"
+                        Grid.Row="3"
+                        x:Name="FlashOnButton"
+                    Foreground="White"
+                    HorizontalContentAlignment="Right"
+                    Click="FlashOnButton_Click"/>
+            <Image Grid.Row="3"
+                       Source="/Assets/FlashOnOff.png"
+                       Width="20"
+                       Margin="10,0,0,0"
+                       Stretch="Uniform"
+                   HorizontalAlignment="Left"
+                   x:Name="FlashOnImage"/>
+
+            <Image Source="/Assets/HorizontalSettingLine.png"
+                   Grid.Row="4"
+                   Stretch="Fill"
+                   Height="1"
+                   Margin="5,0,5,0"/>
+
+            <Button Style="{StaticResource ButtonStyleNoBorder}"
+                        Content="Off"
+                        FontWeight="Light"
+                        FontSize="23"
+                        Margin="0,0,5,0"
+                        Grid.Row="5"
+                        x:Name="FlashOffButton"
+                    Foreground="White"
+                    HorizontalContentAlignment="Right"
+                    Click="FlashOffButton_Click"/>
+            <Image Grid.Row="5"
+                       Source="/Assets/FlashOffOff.png"
+                       Width="20"
+                       Margin="10,0,0,0"
+                       Stretch="Uniform"
+                   HorizontalAlignment="Left"
+                   x:Name="FlashOffImage"/>
+        </Grid>
+    </Grid>
+</UserControl>
